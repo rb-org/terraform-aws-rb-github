@@ -1,5 +1,5 @@
-resource "github_repository" "main" {
-  count       = "${local.update_circleci > 0 ? 1 : 0}"
+resource "github_repository" "main_no_cci" {
+  count       = "${local.update_circleci == 0 ? 1 : 0}"
   name        = "${var.repo_name}"
   description = "${var.repo_description}"
 
@@ -14,15 +14,10 @@ resource "github_repository" "main" {
   auto_init          = "${var.auto_init}"
   gitignore_template = "${var.gitignore_template}"
   license_template   = "${var.license_template}"
-
-  provisioner "local-exec" {
-    on_failure = "continue"
-    command    = "echo ${data.template_file.circleci_api_sh.rendered} >> ./circleci_api.sh && chmod +x ./circleci_api.sh && ./circleci_api.sh"
-  }
 }
 
-data "template_file" "circleci_api_sh" {
-  count    = "${local.update_circleci}"
+data "template_file" "circleci_api_sh_no_cci" {
+  count    = "${local.update_circleci == 0 ? 1 : 0}"
   template = "${file("${path.module}/files/circleci_api.sh.tpl")}"
 
   vars {
@@ -34,16 +29,16 @@ data "template_file" "circleci_api_sh" {
   }
 }
 
-resource "github_team_repository" "main" {
-  count      = "${var.team_count * local.update_circleci > 0 ? var.team_count : 0}"
+resource "github_team_repository" "main_no_cci" {
+  count      = "${var.team_count * local.update_circleci == 0 ? var.team_count : 0}"
   team_id    = "${lookup(var.teams[count.index], "team")}"
-  repository = "${github_repository.main.name}"
+  repository = "${github_repository.main_no_cci.name}"
   permission = "${lookup(var.teams[count.index], "perms")}"
 }
 
-resource "github_branch_protection" "main" {
-  count          = "${local.enable_branch_protection * local.update_circleci > 0 ? 1 : 0}"
-  repository     = "${github_repository.main.name}"
+resource "github_branch_protection" "main_no_cci" {
+  count          = "${local.enable_branch_protection * local.update_circleci == 0 ? 1 : 0}"
+  repository     = "${github_repository.main_no_cci.name}"
   branch         = "master"
   enforce_admins = "${var.enforce_admins}"
 
