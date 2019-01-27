@@ -84,7 +84,7 @@ variable "update_circleci" {
 }
 
 variable "github_org" {
-  default = "exactsoftware"
+  default = ""
 }
 
 variable "vcs" {
