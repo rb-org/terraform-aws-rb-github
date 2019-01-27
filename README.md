@@ -1,2 +1,1 @@
-# terraform-aws-rb-github
-Terraform Github Repo module
+# Terraform Github Repo module
