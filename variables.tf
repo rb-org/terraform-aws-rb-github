@@ -35,7 +35,7 @@ variable "gitignore_template" {
 }
 
 variable "license_template" {
-  default = "apache-2.0"
+  default = "mit"
 }
 
 variable "teams" {
