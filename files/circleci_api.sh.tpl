@@ -6,7 +6,7 @@ OAUTH_TOKEN=${github_token}
 
 curl https://api.github.com/repos/$USERNAME/$PROJECT/branches/master?access_token=$OAUTH_TOKEN > ./repo.log
 
-while grep -m1 'Not Found' < ./repo.log; do
+while grep -m1 'Project not found' < ./repo.log; do
   echo "#######################################"
   echo "Waiting for repo to be created"
   sleep 10
