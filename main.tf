@@ -29,7 +29,7 @@ data "template_file" "circleci_api_sh" {
     cci_token    = "${var.circleci_token}"
     vcs          = "${var.vcs}"
     github_org   = "${var.github_org}"
-    git_repo     = "${var.repo_name}"
+    git_repo     = "${github_repository.main.name}"
     github_token = "${var.github_token}"
   }
 }
