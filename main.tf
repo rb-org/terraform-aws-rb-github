@@ -1,5 +1,5 @@
 resource "github_repository" "main" {
-  count       = "${local.update_circleci > 0 ? 1 : 0}"
+  count       = "${local.update_circleci}"
   name        = "${var.repo_name}"
   description = "${var.repo_description}"
 
@@ -29,13 +29,13 @@ data "template_file" "circleci_api_sh" {
     cci_token    = "${var.circleci_token}"
     vcs          = "${var.vcs}"
     github_org   = "${var.github_org}"
-    git_repo     = "${github_repository.main.name}"
+    git_repo     = "${var.repo_name}"
     github_token = "${var.github_token}"
   }
 }
 
 resource "github_team_repository" "main" {
-  count      = "${var.team_count * local.update_circleci > 0 ? var.team_count : 0}"
+  count      = "${var.team_count * local.update_circleci}"
   team_id    = "${lookup(var.teams[count.index], "team")}"
   repository = "${github_repository.main.name}"
   permission = "${lookup(var.teams[count.index], "perms")}"
